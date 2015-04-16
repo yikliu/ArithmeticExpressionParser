@@ -22,7 +22,7 @@ int strategy = 4; // 1 = postfix, 2 = tree, 3 = flyweight, 4 = functor
 * Get the pointer to strategy
 * 
 * @param[in]  int	 	   
-* @return     Pointer to the new initlized strategy object
+* @return     Pointer to the new initialized strategy object
 * @exception  
 */
 template<typename T>

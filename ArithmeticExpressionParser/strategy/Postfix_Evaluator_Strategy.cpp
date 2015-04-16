@@ -102,7 +102,7 @@ bool Postfix_Evaluator_Strategy<T>::parse_expression(const std::string & expr)
 	std::string token;
 
 	enum symbol {open_paren = 1, num, op = 4, close_paren = 8};
-	unsigned char acceptable_token;
+	unsigned char acceptable_token; //what's the possible token at any iteration
 	acceptable_token = open_paren | num; // Either an open parenthesis or a number can begin an infix expression.
 
 	try
@@ -122,60 +122,17 @@ bool Postfix_Evaluator_Strategy<T>::parse_expression(const std::string & expr)
 					throw std::exception("Bad Infix Format");
 				}
 			}
-			else if(token == "+" || token == "-" || token == "*" || token == "/" || token == "%")
+			else if(token == "+" || token == "-" || token == "*" || token == "/" || token == "%") //if it's a operator
 			{
-				if(acceptable_token & op)
+				if(acceptable_token & op) // and an operator is what's being expected
 				{
-					if(token == "+")
+					while (!p_operator_stack_->is_empty() && !(*p_operator_stack_->top()=="(") && this->priority(*p_operator_stack_->top()) <= this->priority(token))
 					{
-						while (!p_operator_stack_->is_empty() && !(*p_operator_stack_->top()=="(") && this->priority(*p_operator_stack_->top()) <= this->priority(token))
-						{
 							this->create_command(*p_operator_stack_->top());
 							delete p_operator_stack_->top();
 							p_operator_stack_->pop();
-						}
-						p_operator_stack_->push(new std::string(token));
 					}
-					else if(token == "-")
-					{
-						while (!p_operator_stack_->is_empty() && !(*p_operator_stack_->top()=="(") && this->priority(*p_operator_stack_->top()) <= this->priority(token))
-						{
-							this->create_command(*p_operator_stack_->top());
-							delete p_operator_stack_->top();
-							p_operator_stack_->pop();
-						}
-						p_operator_stack_->push(new std::string(token));
-					}
-					else if(token == "*")
-					{
-						while (!p_operator_stack_->is_empty() && !(*p_operator_stack_->top()=="(") && this->priority(*p_operator_stack_->top()) <= this->priority(token))
-						{
-							this->create_command(*p_operator_stack_->top());
-							delete p_operator_stack_->top();
-							p_operator_stack_->pop();
-						}
-						p_operator_stack_->push(new std::string(token));
-					}
-					else if(token == "/")
-					{
-						while (!p_operator_stack_->is_empty() && !(*p_operator_stack_->top()=="(") && this->priority(*p_operator_stack_->top()) <= this->priority(token))
-						{
-							this->create_command(*p_operator_stack_->top());
-							delete p_operator_stack_->top();
-							p_operator_stack_->pop();
-						}
-						p_operator_stack_->push(new std::string(token));
-					}
-					else if(token == "%")
-					{
-						while (!p_operator_stack_->is_empty() && !(*p_operator_stack_->top()=="(") && this->priority(*p_operator_stack_->top()) <= this->priority(token))
-						{
-							this->create_command(*p_operator_stack_->top());
-							delete p_operator_stack_->top();
-							p_operator_stack_->pop();
-						}
-						p_operator_stack_->push(new std::string(token));
-					}
+					p_operator_stack_->push(new std::string(token));
 					acceptable_token = open_paren | num; //only an open parenthesis or a number can follow an operator.
 				}
 				else
@@ -202,7 +159,7 @@ bool Postfix_Evaluator_Strategy<T>::parse_expression(const std::string & expr)
 					throw std::exception("Bad Infix Format");
 				}
 			}
-			else //it's a number or contains wrong character
+			else //it's a number
 			{
 				if(acceptable_token & num)
 				{
@@ -214,10 +171,9 @@ bool Postfix_Evaluator_Strategy<T>::parse_expression(const std::string & expr)
 					throw std::exception("Bad Infix Format");
 				}
 			}
-
 		}
 
-		while (!p_operator_stack_->is_empty())
+		while (!p_operator_stack_->is_empty()) //dump the rest token
 		{
 			this->create_command(*p_operator_stack_->top());
 			delete p_operator_stack_->top();
@@ -264,7 +220,6 @@ bool Postfix_Evaluator_Strategy<T>::create_command(const std::string & token)
 	return true;
 }
 
-
 //
 // priority
 //
@@ -278,7 +233,6 @@ int Postfix_Evaluator_Strategy<T>::priority(const std::string& op) const
 		temp = 2;
 	return temp;
 }
-
 
 //
 //evaluate_expression

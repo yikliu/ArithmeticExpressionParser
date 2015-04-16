@@ -35,7 +35,7 @@ bool ExprTree_Evaluator_Strategy<T>::parse_expression(const std::string & expr)
 	std::istringstream input(expr);
 	std::string token;
 
-	// Use bit operation to determine the appropriate token to follow the previous one in a corret infix format
+	// Use bit operation to determine the appropriate token to follow the previous one  
 	enum symbol {open_paren = 1, num, op = 4, close_paren = 8};
 	unsigned char acceptable_token;
 	acceptable_token = open_paren | num; // Either an open parenthesis or a number can begin an infix expression.
@@ -133,7 +133,6 @@ bool ExprTree_Evaluator_Strategy<T>::parse_expression(const std::string & expr)
 		std::cout<<e.what()<<std::endl;
 		return false;
 	}
-
 	
 	_root = builder->get_expression();
 
@@ -156,6 +155,5 @@ bool ExprTree_Evaluator_Strategy<T>::evaluate_expression(T & result)
 	result = visitor.result();
 	return true;
 }
-
 
 #endif // EXPRTREE_EVALUATOR_CPP_

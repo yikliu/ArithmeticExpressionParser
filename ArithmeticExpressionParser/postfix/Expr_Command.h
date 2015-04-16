@@ -10,17 +10,6 @@
 
 #include "../datastructure/Stack.h"
 
-// Author, do not implement the methods in the header file. Instead,
-// place the implementation in a separate source file, or an inline
-// file.
-//
-// REPLY: Implementation has been moved to CPP file.
-
-// Author, since you have a virtual method in this class, you need
-// to explicity declare the destructor as virtual.
-//
-// REPLY: Destructor is declared as virtual.
-
 /**
  * @class Expr_Command
  * @brief
